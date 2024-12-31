@@ -6,54 +6,56 @@
 
 <h2> 
   <p align="center" width="100%">
-    A container to add a security layer to the Docker socket</br>
+    Un contenedor para añadir una capa de seguridad al Socket de Docker
   </p>
 </h2>
 
 <h3>
   <p align="left" width="100%">
-    Thanks to the <a href="https://github.com/Tecnativa">Tecnativa</a> team's image: <a href="https://github.com/Tecnativa/docker-socket-proxy">docker-socket-proxy</a>
+    Gracias a la imagen del equipo de <a href="https://github.com/Tecnativa">Tecnativa</a>: <a href="https://github.com/Tecnativa/docker-socket-proxy">docker-socket-proxy</a>
   </p>
 </h3>
 
-[![Static Badge](https://img.shields.io/badge/lang-%F0%9F%87%AA%F0%9F%87%B8_es-blue?style=plastic)](README.es.md)
+<!-- [![Static Badge](https://img.shields.io/badge/lang-%F0%9F%87%AC%F0%9F%87%A7_en-blue?style=plastic)](README.md) -->
 
-## Structure:
+## Estructura:
 
     socket-proxy/
-     ├─ docker-compose.yml              → docker file
-     ├─ .env                            → environment variables
-     └─ haproxy.cfg.template (Opcional) → internal config (advanced use)
+     ├─ docker-compose.yml              → archivo docker
+     ├─ .env                            → variables de entorno
+     └─ haproxy.cfg.template (Opcional) → configuración interna (uso avanzado)
 
-### Important! `haproxy.cfg.template`
+### ¡Importante! `haproxy.cfg.template`
 
-The use of `haproxy.cfg.template` is **completely optional**, but if you are going to use it **don't** remove `.template` from the filename. Although it may seem that it's only an example, actually it's the real file that's used by the container.
+El uso de `haproxy.cfg.template` es **totalmente opcional**, pero si se va a hacer uso del mismo **no** hay que quitar el `.template` del nombre de archivo. Aunque pueda parecer que es una plantilla por la extensión, es el archivo que realmente usa el contenedor.
 
-It can be used for example to fit the timeouts or change the internal listening port, the latter used in very specific cases.
+Se puede usar por ejemplo para retocar los tiempos de espera o cambiar el puerto de escucha interno; ésto último se usa en casos muy específicos.
 
-### Other observations (complete comments within each file):
+### Otras observaciones (comentarios completos dentro de cada archivo):
 
 ```dockerfile
+
 ----
-    privileged: true  ← Necessary
+    privileged: true  ← Necesario
     ports:
-      - 127.0.0.1:2375:2375  ← This port must be only exposed to the internal network
+      - 127.0.0.1:2375:2375  ← Este puerto debe ser únicamente expuesto a la red interna
 ----
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - $DOCKERDIR/socket-proxy/haproxy.cfg.template:/usr/local/etc/haproxy/haproxy.cfg.template
-                      ↖ Comment or delete if not used
+                      ↖ Comentar o borrar si no se va a usar
 ----
 ```
->
 
-## Container start
+## Arranque del contenedor
 
 ```bash
-docker compose up -d     → start socket-proxy in background
+docker compose up -d          → arrancamos socket-proxy en segundo plano
 
-docker logs socket-proxy -f   → examine the log to check if there is any issue (CTRL+c for exit)
+docker logs socket-proxy -f   → examinamos los registros para ver si hay algún problema (CTRL+c para salir)
 ```
 </br>
 
-## Ready! We now have an extra layer of security on our Docker socket.
+<h3>
+¡Listo! Ya tenemos una capa de seguridad extra en nuestro socket de Docker.
+</h3>
